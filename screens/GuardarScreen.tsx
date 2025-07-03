@@ -1,109 +1,121 @@
-import { setDoc, doc } from 'firebase/firestore';
 import { useState } from 'react';
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ref, set } from "firebase/database";
 import { db } from '../firebase/Config';
 
 export default function GuardarScreen() {
+  const [cedula, setcedula] = useState("");
+  const [nombre, setnombre] = useState("");
+  const [precio, setprecio] = useState("");
+  const [cantidad, setcantidad] = useState("");
+  const [categoria, setcategoria] = useState("");
+  const [stock, setstock] = useState("");
+  const [total, settotal] = useState("");
+  const [descuento, setdescuento] = useState("");
 
-  const [cedula, setcedula] = useState("")
-  const [nombre, setnombre] = useState("")
-  const [precio, setprecio] = useState("")
-  const [cantidad, setcantidad] = useState("")
-  const [categoria, setcategoria] = useState("")
-  const [stock, setstock] = useState("")
-  const [total, settotal] = useState("")
-
-
-
-  function totalPagar(precio:number, cantidad: number) {
-    let tpagar
-    tpagar = precio * cantidad
-    return tpagar;
+  function totalPagar(precio: number, cantidad: number) {
+    const tpagar = precio * cantidad;
+    const des = tpagar * 0.1;
+    const pagarConDescuento = tpagar - des;
+    return {
+      total: tpagar,
+      descuento: pagarConDescuento
+    };
   }
 
-   async function guardar() {
-    await setDoc(doc(db, "clientes", cedula), {
-      cedula: cedula,
+  function guardar() {
+    set(ref(db, 'usuarios/' + cedula), {
       nombre: nombre,
       precio: precio,
       cantidad: cantidad,
       categoria: categoria,
       stock: stock,
-      total: total
-     
-    });
-    //console.log("Document written with ID: ", docRef.id);
+      total: total,
+      descuento: descuento
+    })
+    Alert.alert("Usuario Guardado");
+
+    setcedula("");
+    setnombre("");
+    setprecio("");
+    setcantidad("");
+    setcategoria("");
+    setstock("");
+    settotal("");
+    setdescuento("");
   }
 
-
-
-  
-
   return (
-       <View>
+    <View>
       <Text>Guardar</Text>
       <TextInput
         placeholder='Ingresar cedula '
-        onChangeText={(texto) => setcedula(texto)}
+        onChangeText={texto => setcedula(texto)}
         style={styles.input}
+        value={cedula}
       />
-
       <TextInput
         placeholder='Ingresar nombre'
-        onChangeText={(texto) => setnombre(texto)}
+        onChangeText={texto => setnombre(texto)}
         style={styles.input}
+        value={nombre}
       />
-
       <TextInput
         placeholder='Ingresar precio'
-        onChangeText={(texto) => setprecio(texto)}
+        onChangeText={texto => setprecio(texto)}
         style={styles.input}
+        value={precio}
+        keyboardType='numeric'
       />
-
       <TextInput
         placeholder='Ingresar cantidad'
-        onChangeText={(texto) => setcantidad(texto)}
+        onChangeText={texto => setcantidad(texto)}
         style={styles.input}
+        value={cantidad}
+        keyboardType='numeric'
       />
-
       <TextInput
         placeholder='Ingresar categoria'
-        onChangeText={(texto) => setcategoria(texto)}
+        onChangeText={texto => setcategoria(texto)}
         style={styles.input}
+        value={categoria}
       />
-
-       <TextInput
+      <TextInput
         placeholder='Ingresar Stock'
-        onChangeText={(texto) => setstock(texto)}
+        onChangeText={texto => setstock(texto)}
         style={styles.input}
+        value={stock}
+        keyboardType='numeric'
       />
-
-       <TextInput
+      <TextInput
         placeholder='Total a Pagar'
         value={total}
         editable={false}
         style={styles.input}
       />
+      <TextInput
+        placeholder='Total con descuento'
+        value={descuento}
+        editable={false}
+        style={styles.input}
+      />
 
-      <Button title='Calcular' onPress={() => {
-        const p = parseFloat(precio)
-        const c = parseInt(cantidad)
-        if (!isNaN(p) && !isNaN(c)) {
-          const resultado = totalPagar(p, c)
-          settotal(resultado.toString())
-        } else {
-          settotal("Datos inválidos")
-        }
-      }} />
+      <Button
+        title='Calcular'
+        onPress={() => {
+          const p = parseFloat(precio);
+          const c = parseInt(cantidad);
+          if (!isNaN(p) && !isNaN(c)) {
+            const { total, descuento } = totalPagar(p, c);
+            settotal(total.toString());
+            setdescuento(descuento.toString());
+          }
+        }}
+      />
 
-      <Button title='Guardar' onPress={() => guardar()} />
-
-
-
-
-      
+      <Button title='Guardar' onPress={guardar} />
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -113,4 +125,4 @@ const styles = StyleSheet.create({
     margin: 6,
     width: "80%"
   }
-})
+});
