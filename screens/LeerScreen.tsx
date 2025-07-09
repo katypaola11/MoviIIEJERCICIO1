@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { ref, onValue } from "firebase/database";
+import { Alert, Button, FlatList, StyleSheet, Text, View } from 'react-native';
+import { ref, onValue , remove } from "firebase/database";
 import { db } from '../firebase/Config';
 
 export default function LeerScreen() {
 
+  const [codigo, setcodigo] = useState("")
   const [datos, setdatos] = useState([])
 
   function leer() {
@@ -14,6 +15,7 @@ export default function LeerScreen() {
       if (data) {
         const arreglo = Object.keys(data).map(key => ({
           id: key,
+          codigo:key,
           ...data[key]
         }));
         setdatos(arreglo as any);
@@ -26,6 +28,7 @@ export default function LeerScreen() {
   useEffect(() => {
     leer();
   }, []);
+
 
   type Usuario = {
     codigo: string;
@@ -51,10 +54,14 @@ export default function LeerScreen() {
             <Text style={styles.info}>Stock: <Text style={styles.value}>{item.stock}</Text></Text>
             <Text style={styles.info}>Precio: <Text style={styles.value}>${item.precio}</Text></Text>
             <Text style={styles.info}>Total con Descuento: <Text style={styles.value}>${item.descuento}</Text></Text>
+          
+            
           </View>
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
+
+      
     </View>
   );
 }

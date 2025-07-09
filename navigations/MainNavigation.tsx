@@ -3,8 +3,9 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import GuardarScreen from '../screens/GuardarScreen';
 import EditarScreen from '../screens/EditarScreen';
 import LeerScreen from '../screens/LeerScreen';
-import EliminarScreen from '../screens/ElimarScreen';
+
 import { NavigationContainer } from '@react-navigation/native';
+import EliminarScreen from '../screens/EliminarScreen';
 
 const Drawer = createDrawerNavigator();
 
