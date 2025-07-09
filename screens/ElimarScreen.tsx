@@ -6,7 +6,7 @@ export default function EliminarScreen() {
 
 
   return (
-    <Text>Guardar</Text>
+    <Text>Eliminar</Text>
     
   );
 

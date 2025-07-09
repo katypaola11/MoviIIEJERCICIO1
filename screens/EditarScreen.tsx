@@ -23,8 +23,8 @@ export default function EditarScreen() {
   }
 
   useEffect(() => {
-    const p = parseFloat(precio);
-    const c = parseInt(stock);
+    let p = parseFloat(precio);
+    let c = parseInt(stock);
     
     if (!isNaN(p) && !isNaN(c) && p > 0 && c > 0) {
       const { total, descuento } = totalPagar(p, c);
