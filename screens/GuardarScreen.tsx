@@ -26,14 +26,11 @@ export default function GuardarScreen() {
     let p = parseFloat(precio);
     let c = parseInt(stock);
 
-    if (!isNaN(p) && !isNaN(c) && p > 0 && c > 0) {
+    if (!isNaN(p) && !isNaN(c) ) {
       const { total, descuento } = totalPagar(p, c);
       settotal(total.toString());
       setdescuento(descuento.toString());
-    } else {
-      settotal("");
-      setdescuento("");
-    }
+    } 
   }, [precio, stock]);
 
   function guardar() {

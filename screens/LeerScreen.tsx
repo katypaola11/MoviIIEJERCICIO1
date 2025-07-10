@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Alert, Button, FlatList, StyleSheet, Text, View } from 'react-native';
+import {  FlatList, StyleSheet, Text, View } from 'react-native';
 import { ref, onValue , remove } from "firebase/database";
 import { db } from '../firebase/Config';
 
